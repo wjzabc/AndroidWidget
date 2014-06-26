@@ -1,5 +1,6 @@
 package com.weibo.widget;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -55,7 +56,6 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(final Context context) {
         super.onEnabled(context);
-
         if (scheduledExecutorService == null) {
             scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
             scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
@@ -71,6 +71,7 @@ public class WidgetProvider extends AppWidgetProvider {
                     AppWidgetManager appWidgetManger = AppWidgetManager.getInstance(context);
                     int[] appIds = appWidgetManger.getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
                     appWidgetManger.updateAppWidget(appIds, rv);
+                    
                 }
             }, 0, 1000, TimeUnit.MILLISECONDS);
         }
