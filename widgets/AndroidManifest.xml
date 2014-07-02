@@ -24,9 +24,13 @@
             </meta-data>
 
             <intent-filter>
+                <action android:name="widget_clicked" />
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
         </receiver>
+        
+        <activity android:name="com.weibo.widget.sinaapi.SsoActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"></activity>
     </application>
 
 </manifest>

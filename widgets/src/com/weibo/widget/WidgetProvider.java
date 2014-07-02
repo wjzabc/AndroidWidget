@@ -1,25 +1,24 @@
 package com.weibo.widget;
 
-import android.app.Activity;
+import com.sina.weibo.sdk.utils.LogUtil;
+import com.weibo.widget.sinaapi.SsoActivity;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import android.widget.Toast;
 
 public class WidgetProvider extends AppWidgetProvider {
     private static final String WIDGET_CLICKED = "widget_clicked";
-    private static int count = 0;
-    private ScheduledExecutorService scheduledExecutorService;
+    private static final String TAG = "WidgetProvider";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.d(TAG, "onUpdate");
         for (int id : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, id);
         }
@@ -27,11 +26,18 @@ public class WidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        
         super.onReceive(context, intent);
-
-        RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-        if (intent.getAction().equals(WIDGET_CLICKED)) {
-            rv.setTextViewText(R.id.text1, "xxx" + count++);
+        String action = intent.getAction();
+        Log.d(TAG, "onReceive action="+action);
+        
+        
+          if (action.equals(WIDGET_CLICKED)) {
+              Log.d(TAG, "WIDGET_CLICKED");
+              Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show();
+          }
+/*        if (action.equals(WIDGET_CLICKED)) {
+            RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
             Intent intentClick = new Intent(WIDGET_CLICKED);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentClick,
                     PendingIntent.FLAG_ONE_SHOT);
@@ -39,52 +45,30 @@ public class WidgetProvider extends AppWidgetProvider {
             AppWidgetManager appWidgetManger = AppWidgetManager.getInstance(context);
             int[] appIds = appWidgetManger.getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
             appWidgetManger.updateAppWidget(appIds, rv);
-        }
+        }*/
 
     }
 
     public static void updateAppWidget(Context context, AppWidgetManager appWidgeManger, int appWidgetId) {
+        Log.d(TAG, "updateAppWidget");
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-        Intent intentClick = new Intent(WIDGET_CLICKED);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentClick, PendingIntent.FLAG_ONE_SHOT);
+//        Intent intentClick = new Intent(WIDGET_CLICKED);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentClick, PendingIntent.FLAG_ONE_SHOT);
+        Intent intent=new Intent(context, SsoActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.text1, pendingIntent);
-        rv.setTextViewText(R.id.text1, "go" + count++);
-        // rv.setOnClickPendingIntent(R.id.text1, pendingIntent);
         appWidgeManger.updateAppWidget(appWidgetId, rv);
     }
 
     @Override
     public void onEnabled(final Context context) {
+        Log.d(TAG, "onEnabled");
         super.onEnabled(context);
-        if (scheduledExecutorService == null) {
-            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-            scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-
-                @Override
-                public void run() {
-                    RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-                    rv.setTextViewText(R.id.text1, "service " + count++);
-                    Intent intentClick = new Intent(WIDGET_CLICKED);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentClick,
-                            PendingIntent.FLAG_ONE_SHOT);
-                    rv.setOnClickPendingIntent(R.id.text1, pendingIntent);
-                    AppWidgetManager appWidgetManger = AppWidgetManager.getInstance(context);
-                    int[] appIds = appWidgetManger.getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
-                    appWidgetManger.updateAppWidget(appIds, rv);
-                    
-                }
-            }, 0, 1000, TimeUnit.MILLISECONDS);
-        }
     }
 
     @Override
     public void onDisabled(Context context) {
-        if (scheduledExecutorService != null) {
-            scheduledExecutorService.shutdown();
-            scheduledExecutorService = null;
-        }
-
+        Log.d(TAG, "onDisabled");
         super.onDisabled(context);
     }
-
 }
