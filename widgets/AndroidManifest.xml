@@ -28,9 +28,16 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
         </receiver>
-        
-        <activity android:name="com.weibo.widget.sinaapi.SsoActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"></activity>
+
+        <activity
+            android:name="com.weibo.widget.sinaapi.SsoActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity android:name="com.weibo.widget.WidgetConfigureActivity" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
