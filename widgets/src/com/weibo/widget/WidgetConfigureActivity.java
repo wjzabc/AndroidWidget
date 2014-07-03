@@ -18,23 +18,25 @@ public class WidgetConfigureActivity extends Activity {
     private LoginButton mLoginButton;
     private WeiboAuthListener mWeiboAuthListener = new WeiboAuthListener() {
 
-         private Oauth2AccessToken mAccessToken;
+        private Oauth2AccessToken mAccessToken;
 
         @Override
         public void onComplete(Bundle values) {
             // 从 Bundle 中解析 Token
-             mAccessToken = Oauth2AccessToken.parseAccessToken(values);
-             if (mAccessToken.isSessionValid()) {
+            mAccessToken = Oauth2AccessToken.parseAccessToken(values);
+            if (mAccessToken.isSessionValid()) {
 
-            // 保存 Token 到 SharedPreferences
-             AccessTokenKeeper.writeAccessToken(WidgetConfigureActivity.this,
-             mAccessToken);
-            Toast.makeText(WidgetConfigureActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-            updateRemoteViews();
-            Intent resultValue = new Intent();
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-            setResult(RESULT_OK, resultValue);
-             finish();
+                // 保存 Token 到 SharedPreferences
+                AccessTokenKeeper.writeAccessToken(WidgetConfigureActivity.this, mAccessToken);
+                Toast.makeText(WidgetConfigureActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                updateRemoteViews();
+                WidgetDataManager widgetManager=WidgetDataManager.getInstance(WidgetConfigureActivity.this);
+                widgetManager.addWidget(mAppWidgetId, mAccessToken);
+                widgetManager.getlatestweibo(mAppWidgetId);
+                Intent resultValue = new Intent();
+                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+                setResult(RESULT_OK, resultValue);
+                finish();
             } else {
                 // 以下几种情况，您会收到 Code：
                 // 1. 当您未在平台上注册的应用程序的包名与签名时；
