@@ -1,6 +1,5 @@
 package com.weibo.widget;
 
-import com.sina.weibo.sdk.utils.LogUtil;
 import com.weibo.widget.sinaapi.SsoActivity;
 
 import android.app.PendingIntent;
@@ -31,14 +30,10 @@ public class WidgetProvider extends AppWidgetProvider {
         String action = intent.getAction();
         Log.d(TAG, "onReceive action="+action);
         
+        
           if (action.equals(WIDGET_CLICKED)) {
               Log.d(TAG, "WIDGET_CLICKED");
-              int id=intent.getIntExtra("wiget_id", -1);
-              Toast.makeText(context, "获取数据。。。"+id, Toast.LENGTH_SHORT).show();
-              WidgetDataManager widgetManager=WidgetDataManager.getInstance(context);
-             
-                  widgetManager.getlatestweibo(id);
-              
+              Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show();
           }
 /*        if (action.equals(WIDGET_CLICKED)) {
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
@@ -56,11 +51,10 @@ public class WidgetProvider extends AppWidgetProvider {
     public static void updateAppWidget(Context context, AppWidgetManager appWidgeManger, int appWidgetId) {
         Log.d(TAG, "updateAppWidget");
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-        Intent intentClick = new Intent(WIDGET_CLICKED);
-        intentClick.putExtra("widget_id", appWidgetId);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentClick, PendingIntent.FLAG_UPDATE_CURRENT);
-//        Intent intent=new Intent(context, SsoActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        Intent intentClick = new Intent(WIDGET_CLICKED);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentClick, PendingIntent.FLAG_ONE_SHOT);
+        Intent intent=new Intent(context, SsoActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.text1, pendingIntent);
         appWidgeManger.updateAppWidget(appWidgetId, rv);
     }

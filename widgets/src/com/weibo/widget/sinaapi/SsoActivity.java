@@ -65,6 +65,12 @@ public class SsoActivity extends Activity {
             mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
         }
     };
+    
+    @Override
+    public void onBackPressed() {
+    	super.onBackPressed();
+    	Log.d(TAG, "onBackPressed");
+    }
 
     private void authorize(Activity activity) {
         mWeiboAuth = new WeiboAuth(activity, Constants.APP_KEY, Constants.REDIRECT_URL, null);
